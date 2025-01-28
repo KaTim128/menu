@@ -10,7 +10,7 @@ if (isset($_SESSION["email"])) {
     $email = $_SESSION["email"];
 
     // // Use secure query to fetch user data
-    $query = "SELECT * FROM testing_tim WHERE email = '$email'";
+    $query = "SELECT * FROM user_tim WHERE email = '$email'";
     $result = mysqli_query($conn, $query);
     /// Check if the query was successful
     if ($result) {

@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addtocart'])) {
 $quantity = 1;
 
 ?>
-test
 <div class="container-fluid p-0">
     <div class="row flex-wrap gx-0">
         <?php require "sidebar.php" ?>

@@ -9,7 +9,7 @@ if (isset($_POST["user_login"]) && $_POST["user_login"] == 1) {
     $pwd = $_POST["pwd"];
 
     // Secure query to fetch user data
-    $query = "SELECT * FROM testing_tim WHERE email = '$email'";
+    $query = "SELECT * FROM user_tim WHERE email = '$email'";
     $result = mysqli_query($conn, $query);
     $q = mysqli_fetch_assoc($result);
 
@@ -17,9 +17,6 @@ if (isset($_POST["user_login"]) && $_POST["user_login"] == 1) {
     if ($pwd == $q["password"]) {
         // Store user data in session
         $_SESSION["email"] = $q["email"];
-        // $_SESSION["id"] = $q["id"];
-        // $_SESSION["name"] = $q["name"];
-        // $formal_name = ucwords(strtolower($_SESSION["name"]));
         header("Location: index.php");
         exit;
     } else {

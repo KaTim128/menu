@@ -14,7 +14,7 @@ if (isset($_POST['user_register'])) {
               </script>";
         exit;
     } else {
-        $insert_query = "INSERT INTO `testing_tim` (name,email,password) VALUES ('$nm','$email','$pwd')";
+        $insert_query = "INSERT INTO `user_tim` (name,email,password) VALUES ('$nm','$email','$pwd')";
         $result = mysqli_query($conn, $insert_query);
 
         if ($result) {
