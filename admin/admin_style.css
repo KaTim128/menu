@@ -1,0 +1,44 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    background-color: #f8f9fa; /* Light gray background */
+    width: 250px;
+    height: 100vh; /* Full height of viewport */
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Slight shadow */
+    padding: 20px 0; /* Space inside the sidebar */
+}
+
+.img{
+    
+}
+
+.btn {
+    width: 90%; /* Button width */
+    text-align: center;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ffffff; /* White background */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Button shadow */
+    transition: all 0.3s ease;
+}
+
+.btn a {
+    text-decoration: none; /* Remove underline */
+    color: #343a40; /* Dark gray text */
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #007bff; /* Blue on hover */
+    color: #ffffff; /* White text on hover */
+}
+
+.btn a:hover {
+    color: #ffffff; /* Ensure text color changes with hover */
+}
