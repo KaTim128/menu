@@ -5,19 +5,21 @@
         </a>
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start mt-5" id="menu">
             <li>
-                <a href="index.php" class="image-container my-2">
-                    <img src="./images/hotpot.png" alt="Food" width="120" height="120" class="zoom">
+                <a href="index.php" class="image-container my-3">
+                    <img src="./images/hotpot.png" alt="Food" class="zoom">
                     <span class="image-text text-dark">Food</span>
                 </a>
             </li>
             <li>
-                <a href="cart.php" class="image-container my-4">
-                    <img src="./images/cart1.png" alt="Cart" width="120" height="120" class="zoom">
-                    <span class="image-text text-dark" style="margin-left: 6px;">Cart</span>
+                <a href="cart.php" class="image-container my-3">
+                    <img src="./images/cart2.png" alt="Cart" class="zoom">
+                </a>
+            </li>
+            <li>
+                <a href="./admin/admin_panel.php" class="image-container my-3">
+                    <img src="./images/admin.png" alt="Admin" class="zoom">
                 </a>
             </li>
         </ul>
-        <hr>
-        <a href="admin/admin_panel.php" class=" my-4">Hi there</a>
     </div>
 </div>

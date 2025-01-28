@@ -1,5 +1,4 @@
-<?php require "connection.php"; ?>
-<?php
+<?php require "connection.php"; 
 
 $values = $_POST["values"];
 $user_id = $_SESSION["user_id"];

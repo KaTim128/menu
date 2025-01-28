@@ -3,6 +3,7 @@ $dbhost = 'localhost';
 $dbuser = 'root';
 $dbpass = '';
 $dbname = 'menu_db';
+session_start();
 
 // Create connection (without specifying database)
 $conn = mysqli_connect($dbhost, $dbuser, $dbpass);
@@ -47,7 +48,6 @@ if (!$conn) {
     die('Could not connect to MySQL: ' . mysqli_connect_error());
 }
 
-// SQL to create table 'cart_tim'
 $sql_cart = "CREATE TABLE IF NOT EXISTS cart_tim (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT(11) NOT NULL,
@@ -88,5 +88,15 @@ $sql_products = "CREATE TABLE IF NOT EXISTS product_tim (
 $retval = mysqli_query($conn, $sql_products);
 if (!$retval) {
     die('Could not create table product_tim: ' . mysqli_error($conn));
+}
+
+$sql_category = 'CREATE TABLE IF NOT EXISTS category_tim (
+    category_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    category_title VARCHAR(50) NOT NULL
+)';
+
+$retval = mysqli_query($conn, $sql_category);
+if (!$retval) {
+    die('Could not create table category: ' . mysqli_error($conn));
 }
 ?>

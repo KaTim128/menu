@@ -1,9 +1,7 @@
 <?php
 require('connection.php');
 
-// Start session
-
-if (isset($_POST["user_login"]) && $_POST["user_login"] == 1) {
+if (isset($_POST["user_login"])) {
 
     $email = $_POST["email"];
     $pwd = $_POST["pwd"];
@@ -13,17 +11,55 @@ if (isset($_POST["user_login"]) && $_POST["user_login"] == 1) {
     $result = mysqli_query($conn, $query);
     $q = mysqli_fetch_assoc($result);
 
-    // Check if password matches
+    // // Check if password matches
+    // if ($pwd == $q["password"]) {
+    //     // Store user data in session
+    //     $_SESSION["email"] = $q["email"];
+    //     header("Location: index.php");
+    //     exit;
+    // } else {
+    //     echo "Error: " . mysqli_error($conn);
+    // }
+
     if ($pwd == $q["password"]) {
         // Store user data in session
         $_SESSION["email"] = $q["email"];
+        $_SESSION["user_id"] = $q["id"];
+        $logged_in_user_id = $_SESSION["user_id"];
+
+        // Step 1: Fetch all items from the guest cart
+        $guest_cart_query = "SELECT * FROM cart_tim WHERE user_id = 0";
+        $guest_cart_result = mysqli_query($conn, $guest_cart_query);
+
+        while ($guest_item = mysqli_fetch_assoc($guest_cart_result)) {
+            $product_id = $guest_item["product_id"];
+            $quantity = $guest_item["quantity"];
+
+            // Step 2: Check if the item already exists in the logged-in user's cart
+            $check_existing_query = "SELECT * FROM cart_tim WHERE user_id = $logged_in_user_id AND product_id = $product_id";
+            $check_existing_result = mysqli_query($conn, $check_existing_query);
+
+            if (mysqli_num_rows($check_existing_result) > 0) {
+                // Item already exists, so update the quantity
+                $update_query = "UPDATE cart_tim SET quantity = quantity + $quantity WHERE user_id = $logged_in_user_id AND product_id = $product_id";
+                mysqli_query($conn, $update_query);
+            } else {
+                // Item does not exist, so insert it into the user's cart
+                $insert_query = "INSERT INTO cart_tim (user_id, product_id, quantity) VALUES ($logged_in_user_id, $product_id, $quantity)";
+                mysqli_query($conn, $insert_query);
+            }
+        }
+
+        // Step 3: Clear the guest cart
+        $clear_guest_cart_query = "DELETE FROM cart_tim WHERE user_id = 0";
+        mysqli_query($conn, $clear_guest_cart_query);
+
         header("Location: index.php");
         exit;
     } else {
-        echo "Error: " . mysqli_error($conn);
+        echo "Error: Invalid email or password.";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +92,7 @@ if (isset($_POST["user_login"]) && $_POST["user_login"] == 1) {
                                 <input type="password" class="form-control" name="pwd" id="password"
                                     placeholder="Password" required />
                             </div>
-                            <button type="submit" class="btn btn-success" name="user_login" value="1">Login</button>
+                            <button type="submit" class="btn btn-success" name="user_login">Login</button>
                         </form>
                         <p class="mt-3">
                             Not registered?<a href="register.php"> Create an account</a>

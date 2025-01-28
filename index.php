@@ -4,7 +4,6 @@ require("header.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addtocart'])) {
     $product_id = intval($_POST['addtocart']);
 
-
     // Fetch product details from the database
     $product_query = mysqli_query($conn, "SELECT * FROM product_tim WHERE id = $product_id");
     if ($product_query && mysqli_num_rows($product_query) > 0) {
@@ -42,19 +41,24 @@ $quantity = 1;
                             <h5 class="mt-2 cat">Categories</h5>
                         </span> </button>
                     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                        <?php
+                        $select_query = "SELECT * FROM category_tim";
+                        $select_result = mysqli_query($conn, $select_query);
+                        ?>
+
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link text-center" href="index.php">All</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-center" href="?category=western">Western</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-center" href="?category=japanese">Japanese</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-center" href="?category=chinese">Chinese</a>
-                            </li>
+                            <?php
+                            // Loop through the query result and create list items for each category
+                            while ($row = mysqli_fetch_assoc($select_result)) {
+                                $category_title = $row['category_title'];
+                                echo '<li class="nav-item">
+                                    <a class="nav-link text-center" href="?category=' . urlencode($category_title) . '">' . htmlspecialchars($category_title) . '</a>
+                                </li>';
+                            }
+                            ?>
                         </ul>
                     </div>
                 </div>

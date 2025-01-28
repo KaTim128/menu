@@ -1,63 +1,59 @@
 <?php
 require('connection.php');
-$name = "";
-$formal_name = 'Guest';
-$user_id = "";
 
-echo $user_id;
-// Check if email is provided using $_GET
+// Default values for a guest user
+$name = "Guest";
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0; // Use session user_id or 0 for guest
+
+// Check if email is provided in the session
 if (isset($_SESSION["email"])) {
     $email = $_SESSION["email"];
 
-    // // Use secure query to fetch user data
+    // Use secure query to fetch user data
     $query = "SELECT * FROM user_tim WHERE email = '$email'";
     $result = mysqli_query($conn, $query);
-    /// Check if the query was successful
+
+    // Check if the query was successful and fetch user data
     if ($result) {
         $rows = mysqli_fetch_array($result);
-        $_SESSION['user_id'] = $rows['id'];
-        $user_id = $_SESSION['user_id'];
-        $name = $rows["name"];
-        $email = $rows["email"];
-        $formal_name = ucwords(strtolower($name));
+        if ($rows) {
+            $_SESSION['user_id'] = $rows['id']; // Store user ID in session
+            $user_id = $_SESSION['user_id'];    // Set the user ID
+            $name = $rows["name"];              // Fetch user name
+            $email = $rows["email"];            // Fetch user email
+            $formal_name = ucwords(strtolower($name)); // Format the user's name
+        } else {
+            // If user not found, treat as guest
+            $formal_name = "Guest";
+        }
     } else {
-        $name = "guest";
-        $_SESSION["user_id"] = 0;
-        $user_id = $_SESSION["user_id"];
-        $email = "guest@example.com";
+        echo "Error executing query: " . mysqli_error($conn);
     }
 } else {
-    $name = "guest";
-    $_SESSION["user_id"] = 0;
-    $user_id = $_SESSION["user_id"];
-    $email = "guest@example.com";
+    // If no email in session, treat as guest
+    $formal_name = "Guest";  // Default guest name
 }
 
-// // Debugging output
-// echo "User found: " . $name . "<br>";
-// echo "User ID: " . $user_id . "<br>";
-// echo "User email: " . $email . "<br>";
-// echo "Formal Name: " . $formal_name . "<br>";
-
-// Initialize cart count
+// Handle cart count
 $num_items = 0;
 
+// Modify cart query to consider guest user ID or logged-in user ID
 $cart_count_query = "SELECT SUM(quantity) as total_items FROM cart_tim WHERE user_id = $user_id";
 $cart_result = mysqli_query($conn, $cart_count_query);
 
 if ($cart_result) {
     // Fetch the result as an associative array
     $cart_result_data = mysqli_fetch_assoc($cart_result);
-    if ($cart_result_data) {
-        $num_items = $cart_result_data['total_items'];
+    if ($cart_result_data && isset($cart_result_data['total_items'])) {
+        $num_items = $cart_result_data['total_items']; // Get the total items in the cart
     }
     mysqli_free_result($cart_result); // Free the result to free memory
 } else {
     // Handle the case where the cart query fails
     echo "Error fetching cart count: " . mysqli_error($conn);
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -65,7 +61,6 @@ if ($cart_result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main page</title>
-
     <link rel="stylesheet" href="bootstrap.css">
     <script defer src="bootstrap.bundle.js"></script>
     <script src="jquery-3.7.1.min.js"></script>
@@ -98,10 +93,11 @@ if ($cart_result) {
                         </a>
                     </li>
                     <?php
-                    if ($_SESSION['user_id'] == 0) {
-                        echo '<li class="nav-item"><a class="nav-link zoom text-light" href="login.php">Sign in</a></li>';
+                    // Check if the user is logged in
+                    if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != 0) {
+                        echo '<li class="nav-item"><a class="nav-link zoom text-light" href="logout.php">Sign out</a></li>';
                     } else {
-                        echo '<li  class="nav-item"><a class="nav-link zoom text-light" href="logout.php">Sign out</a></li>';
+                        echo '<li class="nav-item"><a class="nav-link zoom text-light" href="login.php">Sign in</a></li>';
                     }
                     ?>
                 </ul>
