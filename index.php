@@ -2,6 +2,12 @@
 require("header.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addtocart'])) {
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == 0) {
+        // Redirect to login page if not logged in
+        header('Location: login.php');
+        exit;
+    }
+
     $product_id = intval($_POST['addtocart']);
 
     // Fetch product details from the database
@@ -98,10 +104,16 @@ $quantity = 1;
                                     <p class="card-text mb-0">Price:
                                         RM<?php echo number_format($product_price, 2); ?></p>
                                 </div>
-                                <button type="button" class="btn btn-yellow btn-sm px-3 py-2 mt-2"
-                                    onclick="addToCart(<?= $row['id'] ?>)" <?= isset($incart_result['product_id']) ? 'disabled' : '' ?>>
-                                    <?= isset($incart_result['product_id']) ? 'In Cart' : 'Add to Cart' ?>
-                                </button>
+                                <?php if ($user_id == 0) { ?>
+                                    <button type="button" class="btn btn-yellow btn-sm px-3 py-2 mt-2"
+                                        onclick="window.location.href='login.php'">Add to Cart</button>
+                                <?php } else { ?>
+                                    <button type="button" class="btn btn-yellow btn-sm px-3 py-2 mt-2"
+                                        onclick="addToCart(<?= $row['id'] ?>)" <?= isset($incart_result['product_id']) ? 'disabled' : '' ?>>
+                                        <?= isset($incart_result['product_id']) ? 'In Cart' : 'Add to Cart' ?>
+                                    </button>
+                                    <?php
+                                } ?>
                                 <button type="button" class="btn btn-yellow btn-sm px-3 py-2 mt-2"
                                     onclick="window.location.href='details.php?id=<?= $row['id'] ?>'">Details</button>
 
