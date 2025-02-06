@@ -1,20 +1,28 @@
 <?php
 require("admin_panel.php");
+
+$message = isset($_SESSION['message']) ? $_SESSION['message'] : "";
+unset($_SESSION['message']);
 ?>
 
 <div class="col-md-10">
     <div class="form-container m-5">
+        <div id="alert_box" class="alert alert-success d-flex justify-content-between align-items-center" role="alert"
+            style="height: 50px; visibility: <?= empty($message) ? 'hidden' : 'visible' ?>;">
+            <span><?= htmlspecialchars($message) ?></span>
+            <button id="close" type="button" class="btn-close"></button>
+        </div>
         <form method="post">
             <div class="mb-5 container ">
-                <label for="category" class="form-label mt-5 justify-content-center item-align-center d-flex">Insert New
-                    Category</label>
+                <label for="category" class="form-label mt-5 justify-content-center item-align-center d-flex"><b>Insert New
+                    Category</b></label>
                 <input type="text" name="category" id="category" class="form-control" placeholder="Enter category">
                 <button type="submit" class="btn mt-3">Submit</button>
             </div>
         </form>
         <form method="post" enctype="multipart/form-data">
             <div class="mb-5 container">
-                <label class="form-label justify-content-center item-align-center d-flex">Insert New Product</label>
+                <label class="form-label justify-content-center item-align-center d-flex"><b>Insert New Product</b></label>
                 <input type="text" name="prod_name" class="form-control mt-1" placeholder="Enter new product name"
                     required>
 
@@ -34,7 +42,7 @@ require("admin_panel.php");
                     while ($row = mysqli_fetch_assoc($result_courses)) {
                         $category_title = $row['category_title'];
                         $category_id = $row['category_id'];
-                        echo "<option value='$category_id'>$category_title</option>";
+                        echo "<option value='$category_title'>$category_title</option>";
                     }
                     ?>
                 </select>
@@ -46,5 +54,37 @@ require("admin_panel.php");
 </div>
 </div>
 </body>
+<script>
+    $(document).ready(function () {
+        var $alertBox = $('#alert_box');
+
+        if ($alertBox.length) {
+            var myTimeOut = setTimeout(myTimeoutFunction, 3000);
+
+            $alertBox.on('mouseleave', function () {
+                myTimeOut = setTimeout(myTimeoutFunction, 3000);
+            });
+
+            $alertBox.on('mouseenter', function () {
+                clearTimeout(myTimeOut);
+            });
+
+            function myTimeoutFunction() {
+                $alertBox.fadeOut('fast', function () {
+                    $(this).css("visibility", "hidden"); // Hide but keep space
+                });
+            }
+
+            // On click, fade out and hide
+            $("#close").click(function () {
+                clearTimeout(myTimeOut);
+                $alertBox.fadeOut('fast', function () {
+                    $(this).css("visibility", "hidden");
+                });
+            });
+        }
+    });
+
+</script>
 
 </html>

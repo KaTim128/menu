@@ -44,7 +44,7 @@ if (isset($_GET['id'])) {
             <div class="container mb-5 p-2">
                 <div class="row mt-5">
                     <div class="col-md-6 p-4" style="display: flex; justify-content: center; align-items: center;">
-                        <img src="images/<?= $product_image ?>" class="shadow-sm card zoom product-image">
+                        <img src="./admin/uploads/<?= $product_image ?>" class="shadow-sm card zoom product-image">
                     </div>
                     <div class="col-md-6">
                         <h3 class="mb-4"><b><?php echo $product_name; ?></b></h3>
@@ -54,11 +54,16 @@ if (isset($_GET['id'])) {
                             <div class="row gap-2">
                                 <li><b>Product ID:</b> <?php echo $product_id; ?></li>
                                 <li><b>Category:</b> <?php echo $product_category; ?></li>
-                                <button type="button" class="btn btn-yellow col-md-6 zoom-in mt-2" id="addtocart"
-                                    onclick="addToCart(<?= $product_id ?>, '<?= $product_name ?>', <?= $product_price ?>, '<?= $product_image ?>')"
-                                    <?= isset($incart_result['product_id']) ? 'disabled' : '' ?>>
-                                    <?= isset($incart_result['product_id']) ? 'In Cart' : 'Add to Cart' ?>
-                                </button>
+                                <?php if ($user_id == 0) { ?>
+                                    <button type="button" class="btn btn-yellow col-md-6 zoom-in mt-2"
+                                        onclick="window.location.href='login.php'">Add to Cart</button>
+                                <?php } else { ?>
+                                    <button type="button" class="btn btn-yellow col-md-6 zoom-in mt-2"
+                                        onclick="addToCart(<?= $row['id'] ?>)" <?= isset($incart_result['product_id']) ? 'disabled' : '' ?>>
+                                        <?= isset($incart_result['product_id']) ? 'In Cart' : 'Add to Cart' ?>
+                                    </button>
+                                    <?php
+                                } ?>
                                 <button type="button" class="btn btn-yellow col-md-6 zoom-in mt-2"
                                     onclick="window.location.href='cart.php'">Head to Cart</button>
                                 <button type="button" class="btn btn-yellow col-md-6 zoom-in mt-2"

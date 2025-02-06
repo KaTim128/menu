@@ -78,7 +78,7 @@ if (isset($_POST['remove'])) {
                                     <td class="cart-table-cell"
                                         style="text-align: center; vertical-align: middle; padding: 10px; border: 1px solid #ddd;"
                                         data-label="Product Image">
-                                        <img src='./images/<?= $product_image ?>'
+                                        <img src='./admin/uploads/<?= $product_image ?>'
                                             class='product-image shadow-sm card zoom display-center my-2'
                                             style='border-radius:5px; width:80px; height:80px; display: block; margin: 0 auto;'
                                             alt='Product Image'>

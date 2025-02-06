@@ -1,19 +1,20 @@
 <?php
 require('../connection.php');
 
+if (!isset($_SESSION['message'])) {
+    $_SESSION['message'] = "";
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Insert new category
     if (isset($_POST['category'])) {
         $category = $_POST['category'];
         if (!empty($category)) {
             $category = mysqli_real_escape_string($conn, $category);
-
             $sql = "INSERT INTO category_tim (category_title) VALUES ('$category')";
             if (mysqli_query($conn, $sql)) {
-                header("Location: insertion.php?success=1");
+                $_SESSION['message'] = "Category added successfully";
+                header("Location: insertion.php");
                 exit();
-            } else {
-                echo "Error: " . mysqli_error($conn);
             }
         }
     }
@@ -28,19 +29,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image = $_FILES['prod_img']['name'];
         $temp_image = $_FILES['prod_img']['tmp_name'];
 
-        // Move uploaded file to uploads directory
         if (move_uploaded_file($temp_image, "./uploads/$image")) {
             $sql = "INSERT INTO product_tim (name, img, price, description, category) 
                     VALUES ('$prod_name', '$image', '$prod_price', '$prod_desc', '$prod_cat')";
 
             if (mysqli_query($conn, $sql)) {
-                header("Location: insertion.php?success=1");
+                $_SESSION['message'] = "Product added successfully";
+                header("Location: insertion.php");
                 exit();
             }
         }
     }
 }
 
+if (isset($_GET["remove"])) {
+    $product_id = $_GET['remove'];
+    $product_query = "DELETE FROM product_tim WHERE id = $product_id";
+    $product_result = mysqli_query($conn, $product_query);
+    header("Location: view.php");
+}
+
+if (!isset($_SESSION['message_updt'])) {
+    $_SESSION['message_updt'] = "";
+}
 ?>
 
 
@@ -67,12 +78,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row">
             <!-- Sidebar Section -->
             <div class="col-md-2 sidebar d-flex justify-content-center align-items-center">
-                <img src="../images/default.png" alt="" class="my-4">
+                <img src="../images/cat.png" alt="" class="my-4">
+                <button class="btn mb-3 zoom text-center">
+                    <a href="admin_dashboard.php" class="text-dark font-bold">Dashboard</a>
+                </button>
                 <button class="btn mb-3 zoom text-center">
                     <a href="insertion.php" class="text-dark font-bold">Insertion</a>
                 </button>
                 <button class="btn mb-3 zoom text-center">
-                    <a href="insertion.php" class="text-dark font-bold">View</a>
+                    <a href="view.php" class="text-dark font-bold">View Products</a>
                 </button>
                 <button class="btn mb-3 zoom text-center">
                     <a href="" class="text-dark font-bold">All Orders</a>
